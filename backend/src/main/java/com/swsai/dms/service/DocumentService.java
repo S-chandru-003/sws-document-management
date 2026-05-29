@@ -55,7 +55,7 @@ public class DocumentService {
         for (MultipartFile file : files) {
             // Save the physical file
             String storedName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path destination = Paths.get(uploadDir).resolve(storedName);
+            Path destination = resolveUploadDir().resolve(storedName);
             file.transferTo(destination.toFile());
 
             Document doc = Document.builder()
@@ -168,10 +168,14 @@ public class DocumentService {
     }
 
     private void ensureUploadDir() throws IOException {
-        Path dir = Paths.get(uploadDir);
+        Path dir = resolveUploadDir();
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
+    }
+
+    private Path resolveUploadDir() {
+        return Paths.get(uploadDir).toAbsolutePath().normalize();
     }
 
     private String buildBatchSummary(int completed, int failed) {
