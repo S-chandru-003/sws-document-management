@@ -34,6 +34,9 @@ function FileRow({ item }) {
           <span className="text-[10px] text-surface-700 flex-shrink-0">
             {fmtBytes(item.fileSize)}
           </span>
+          <span className="text-[10px] text-surface-700 flex-shrink-0 hidden sm:inline">
+            {item.fileType || "application/pdf"}
+          </span>
         </div>
         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full
                           ${cfg.text} ${cfg.bg} ring-1 ring-current/20`}>

@@ -137,6 +137,7 @@ export default function App() {
         serverId:       null,
         fileName:       f.name,
         fileSize:       f.size,
+        fileType:       f.type || "application/pdf",
         status:         "PENDING",
         progressPercent: 0,
       }));

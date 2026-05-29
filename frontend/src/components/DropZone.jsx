@@ -19,11 +19,12 @@ export default function DropZone({ onFilesSelected, disabled }) {
     [onFilesSelected]
   );
 
-  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, isDragReject, open } = useDropzone({
     onDrop,
     accept: { "application/pdf": [".pdf"] },
     multiple: true,
     disabled,
+    noClick: true,
   });
 
   const borderColor = isDragReject
@@ -36,11 +37,16 @@ export default function DropZone({ onFilesSelected, disabled }) {
     <div
       {...getRootProps()}
       className={`relative rounded-2xl border-2 border-dashed px-8 py-10
-                  transition-all duration-200 cursor-pointer select-none
+                  transition-all duration-200 select-none
                   ${borderColor}
                   ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
-      <input {...getInputProps()} />
+      <input
+        {...getInputProps({
+          accept: "application/pdf,.pdf",
+          multiple: true,
+        })}
+      />
 
       <UploadCloudIcon />
 
@@ -52,11 +58,18 @@ export default function DropZone({ onFilesSelected, disabled }) {
         ) : (
           <>
             <p className="text-sm font-600 text-surface-900">
-              Drop files here or{" "}
-              <span className="text-brand-600 underline underline-offset-2">
-                click to browse
-              </span>
+              Drop one or multiple PDF files here
             </p>
+            <button
+              type="button"
+              onClick={open}
+              disabled={disabled}
+              className="mt-3 inline-flex items-center justify-center rounded-lg bg-brand-600
+                         px-4 py-2 text-xs font-700 text-white shadow-sm transition-colors
+                         hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Select PDFs
+            </button>
             <p className="mt-1 text-xs text-surface-700">
               Supports PDF files · Multiple selection allowed
             </p>
