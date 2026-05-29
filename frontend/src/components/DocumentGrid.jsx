@@ -24,7 +24,7 @@ const DownloadIcon = () => (
   </svg>
 );
 
-export default function DocumentGrid({ documents, loading }) {
+export default function DocumentGrid({ documents, loading, onDelete }) {
   if (loading) {
     return (
       <div className="py-16 text-center">
@@ -121,21 +121,32 @@ export default function DocumentGrid({ documents, loading }) {
                 </span>
               </td>
 
-              {/* Download */}
+              {/* Actions */}
               <td className="py-3 px-4 text-right">
-                {doc.status === "COMPLETE" ? (
-                  <a
-                    href={downloadUrl(doc.id)}
-                    download={doc.fileName}
-                    className="inline-flex items-center gap-1.5 text-brand-600 hover:text-brand-800
-                               font-500 text-xs transition-colors duration-150"
+                <div className="inline-flex items-center gap-3 justify-end">
+                  {doc.status === "COMPLETE" ? (
+                    <a
+                      href={downloadUrl(doc.id)}
+                      download={doc.fileName}
+                      className="inline-flex items-center gap-1.5 text-brand-600 hover:text-brand-800
+                                 font-500 text-xs transition-colors duration-150"
+                    >
+                      <DownloadIcon />
+                      Download
+                    </a>
+                  ) : (
+                    <span className="text-xs text-surface-300">—</span>
+                  )}
+
+                  <button
+                    onClick={() => onDelete && onDelete(doc.id)}
+                    className="text-xs text-red-600 hover:text-red-800 font-500 px-2 py-1 rounded-md
+                               border border-red-100 bg-red-50/40 transition-colors duration-150"
+                    title="Delete"
                   >
-                    <DownloadIcon />
-                    Download
-                  </a>
-                ) : (
-                  <span className="text-xs text-surface-300">—</span>
-                )}
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

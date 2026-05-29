@@ -22,6 +22,9 @@ export const uploadDocuments = (files, onUploadProgress) => {
 export const downloadUrl = (id) =>
   `${api.defaults.baseURL}/api/documents/${id}/download`;
 
+export const deleteDocument = (id) =>
+  api.delete(`/api/documents/${id}`);
+
 // ── Notifications ─────────────────────────────────────────────────────────────
 
 export const fetchNotifications = () =>

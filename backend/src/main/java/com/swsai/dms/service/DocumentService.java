@@ -35,18 +35,22 @@ public class DocumentService {
     @Value("${app.upload.dir:./uploads}")
     private String uploadDir;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Public API
-    // ─────────────────────────────────────────────────────────────────────────
-
+   
     public List<Document> getAllDocuments() {
         return documentRepository.findAllByOrderByUploadDateDesc();
     }
 
-    /**
-     * Accepts one or more files, persists PENDING records immediately,
-     * then hands off async background processing per-file.
-     */
+    @Transactional
+    public void deleteDocument(Long id) throws IOException {
+        Document doc = documentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document not found: " + id));
+
+        Path filePath = Paths.get(doc.getFilePath());
+        Files.deleteIfExists(filePath);
+        documentRepository.delete(doc);
+    }
+
+   
     @Transactional
     public List<Document> initiateUpload(MultipartFile[] files) throws IOException {
         ensureUploadDir();

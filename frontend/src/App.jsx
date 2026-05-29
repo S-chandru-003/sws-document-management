@@ -9,6 +9,7 @@ import {
   fetchDocuments,
   fetchNotifications,
   uploadDocuments,
+  deleteDocument,
 } from "./services/api";
 import "./styles/index.css";
 
@@ -174,6 +175,24 @@ export default function App() {
     []
   );
 
+  const handleDeleteDocument = useCallback(async (id) => {
+    if (!window.confirm('Delete this file? This cannot be undone.')) return;
+    try {
+      await deleteDocument(id);
+      setToasts((t) => [
+        ...t,
+        { id: uid(), message: 'Document deleted', type: 'INFO', timestamp: new Date().toISOString() },
+      ]);
+      loadDocuments();
+    } catch (e) {
+      console.error('Failed to delete document', e);
+      setToasts((t) => [
+        ...t,
+        { id: uid(), message: 'Delete failed', type: 'ERROR', timestamp: new Date().toISOString() },
+      ]);
+    }
+  }, [loadDocuments]);
+
   const dismissToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
@@ -256,7 +275,7 @@ export default function App() {
             </button>
           </div>
 
-          <DocumentGrid documents={documents} loading={docsLoading} />
+          <DocumentGrid documents={documents} loading={docsLoading} onDelete={handleDeleteDocument} />
         </div>
       </main>
     </div>
